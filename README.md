@@ -65,6 +65,56 @@ npm run dev          # http://localhost:5173 ，/api 默认代理到 :8000
   时设置为后端 URL；同源部署留空即可。
 - `IPCHECK_DB_PATH`（后端）：SQLite 文件路径，默认 `/data/ipcheck.db`。
 
+## 部署（自部署）
+
+前端是纯静态站点，后端是一个标准 FastAPI 服务，两者分开部署，前端通过构建期变量
+`VITE_API_BASE` 指向后端地址。
+
+### 1. 后端（Docker）
+
+`backend/Dockerfile` 已就绪（已用 Docker 实测构建+运行通过）：
+
+```bash
+cd backend
+docker build -t ip-check-backend .
+# 挂卷持久化 SQLite 缓存；容器内监听 8080，这里映射到宿主 8080
+docker run -d -p 8080:8080 -v ipcheck-data:/data ip-check-backend
+curl http://localhost:8080/healthz          # -> {"status":"ok"}
+```
+
+- 监听端口取 `$PORT`，默认 `8080`（Fly.io / Render / Cloud Run 会自动注入 `$PORT`）。
+- SQLite 缓存写在 `IPCHECK_DB_PATH`（默认 `/data/ipcheck.db`）；务必把 `/data` 挂成卷，
+  否则重启后缓存丢失。
+- **CORS**：后端默认 `allow_origins=["*"]`（仅 `GET`），所以静态前端跨域调用即可。
+  若要收紧，改 `backend/app/main.py` 里的 `CORSMiddleware`，把前端域名加进白名单。
+
+平台示例：
+- **Fly.io**：`cd backend && fly launch --dockerfile Dockerfile`（用上面的 Dockerfile），
+  并 `fly volumes create ipcheck_data --size 1` 后在 `fly.toml` 挂到 `/data`。
+- **Render**：New → Web Service → 选 Docker，Root Directory 设为 `backend`，加一个挂到
+  `/data` 的 Disk。
+- 任意支持 Docker 的主机：直接用上面的 `docker run`。
+
+不用 Docker 也可以：
+
+```bash
+cd backend && uv sync --no-dev
+IPCHECK_DB_PATH=/var/lib/ipcheck/ipcheck.db uv run uvicorn app.main:app --host 0.0.0.0 --port 8080
+```
+
+### 2. 前端（静态）
+
+构建期把 `VITE_API_BASE` 设为上一步的后端公网地址，再发布 `frontend/dist`：
+
+```bash
+cd frontend
+VITE_API_BASE=https://your-backend.example.com npm run build
+# 把 frontend/dist/ 部署到任意静态托管（Netlify / Vercel / Cloudflare Pages / Nginx 等）
+```
+
+- `VITE_API_BASE` 留空则前端走第三方 geo 兜底（无 `机房 IP (Hosting)` 徽标与服务端缓存）。
+- 若前后端**同源**（同一域名下用反向代理把 `/api` 转发到后端），`VITE_API_BASE` 留空即可。
+
 ## 检查
 
 ```bash
