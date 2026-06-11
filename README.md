@@ -70,6 +70,9 @@ npm run dev          # http://localhost:5173 ，/api 默认代理到 :8000
 前端是纯静态站点，后端是一个标准 FastAPI 服务，两者分开部署，前端通过构建期变量
 `VITE_API_BASE` 指向后端地址。
 
+> 部署到自己 VPS 的**完整手把手文档**（含 Nginx 反代 + HTTPS + systemd + 故障排查）见
+> [`DEPLOY.md`](./DEPLOY.md)。下面是速查版。
+
 ### 1. 后端（Docker）
 
 `backend/Dockerfile` 已就绪（已用 Docker 实测构建+运行通过）：
