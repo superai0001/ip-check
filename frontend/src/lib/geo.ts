@@ -76,7 +76,8 @@ export async function lookupGeo(ip: string | null): Promise<GeoResult | null> {
   const promise = (async () => {
     let result = await fetchGeoFromServer(ip)
     if (!result) result = await fetchGeoFallback(ip)
-    geoCache.set(key, result)
+    // Only cache successes, so a transient failure can be retried on re-run.
+    if (result) geoCache.set(key, result)
     return result
   })()
 

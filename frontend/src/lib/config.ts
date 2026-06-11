@@ -29,7 +29,6 @@ export const SPLIT_TESTS: SplitTest[] = [
   { name: '网易', type: 'domestic', method: 'netease' },
   { name: '阿里云', type: 'domestic', method: 'alibaba' },
   { name: '字节跳动', type: 'domestic', method: 'bytedance', url: 'https://perfops.byte-test.com/500b-bench.jpg' },
-  { name: 'Cloudflare 中国', type: 'domestic', method: 'cftrace', domain: 'www.qualcomm.cn' },
   { name: '高通中国', type: 'domestic', method: 'cftrace', domain: 'www.qualcomm.cn' },
 
   // ---- 国际 (international) ----
