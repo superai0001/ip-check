@@ -28,19 +28,19 @@ onMounted(() => {
   <div class="page">
     <header class="topbar">
       <div class="brand">
-        <span class="brand-dot" />
+        <span class="brand-logo">🌐</span>
         <span>IP 出口分流检测</span>
       </div>
       <div class="topbar-actions">
-        <button class="btn" @click="rerun">重新检测</button>
+        <button class="btn primary" @click="rerun">🔄 重新检测</button>
         <button class="btn icon" :aria-label="dark ? '切换到亮色' : '切换到暗色'" @click="toggleTheme">
-          {{ dark ? '☀' : '☾' }}
+          {{ dark ? '☀️' : '🌙' }}
         </button>
       </div>
     </header>
 
     <main class="container">
-      <h1>我的 IP 查询</h1>
+      <h1>🛰️ <span class="title-grad">我的 IP 查询</span></h1>
       <p class="subtitle">查看当前出口 IP、地理位置、网络连通性，以及访问不同网站时的 IP 分流情况。</p>
 
       <HeroPanel :current-ip="currentIp" :ip-loading="ipLoading" :pings="pings" />

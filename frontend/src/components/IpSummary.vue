@@ -9,7 +9,7 @@ defineProps<{
 <template>
   <section class="card summary">
     <div class="summary-head">
-      <h2>分流出口 IP 汇总</h2>
+      <h2 class="card-title"><span class="ico">🌍</span>分流出口 IP 汇总</h2>
       <span class="summary-count">{{ summary.length }} 个出口</span>
     </div>
     <p class="summary-hint">

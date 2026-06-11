@@ -11,6 +11,17 @@ export const TAG_LABELS: Record<SiteTag, string> = {
   static: 'Static',
 }
 
+export const TAG_EMOJI: Record<SiteTag, string> = {
+  ai: '🤖',
+  social: '💬',
+  crypto: '🪙',
+  tools: '🛠️',
+  speed: '⚡',
+  dev: '👨‍💻',
+  media: '🎬',
+  static: '📦',
+}
+
 // Country code -> emoji flag (no image assets needed).
 export function flagEmoji(countryCode: string | null | undefined): string {
   if (!countryCode || countryCode.length !== 2) return ''
